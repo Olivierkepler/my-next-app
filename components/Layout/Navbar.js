@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-export default function NavBar() {
-  const [isOpen, setIsOpen] = useState(false); // Mobile menu state
+// Memoize the NavBar component to prevent unnecessary re-renders
+const NavBar = memo(function NavBar() {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  // Navigation links
+  // Static navigation links - defined outside component to prevent recreation
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
@@ -19,10 +20,8 @@ export default function NavBar() {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="text-2xl font-bold tracking-wider">
-          <Link href="/">DeliveryPro</Link>
+          <Link href="/" prefetch={false}>DeliveryPro</Link>
         </div>
-
-       
 
         {/* Navigation Links */}
         <ul
@@ -39,7 +38,7 @@ export default function NavBar() {
                   : 'hover:border-b-2 hover:border-blue-400'
               } px-2 py-1`}
             >
-              <Link href={link.path}>{link.name}</Link>
+              <Link href={link.path} prefetch={false}>{link.name}</Link>
             </li>
           ))}
 
@@ -51,12 +50,14 @@ export default function NavBar() {
             <div className="absolute hidden group-hover:block bg-gray-800 shadow-md rounded-md w-40">
               <Link
                 href="/pricing"
+                prefetch={false}
                 className="block px-4 py-2 hover:bg-gray-700"
               >
                 Pricing
               </Link>
               <Link
                 href="/faq"
+                prefetch={false}
                 className="block px-4 py-2 hover:bg-gray-700"
               >
                 FAQ
@@ -65,8 +66,8 @@ export default function NavBar() {
           </li>
         </ul>
 
-         {/* Hamburger Button for Mobile */}
-         <button
+        {/* Hamburger Button for Mobile */}
+        <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden focus:outline-none"
           aria-label="Toggle Menu"
@@ -98,4 +99,6 @@ export default function NavBar() {
       </div>
     </nav>
   );
-}
+});
+
+export default NavBar;
